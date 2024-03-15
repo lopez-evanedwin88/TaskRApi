@@ -12,9 +12,9 @@ docker-compose up -d
 
 ## Container 
 
-- **PHPMyAdmin** is available at `http://localhost:8080`
-- **CodeIgniter** is available at `http://localhost:7700`
-- **MySQL** is available at port `3310`
+- **PHPMyAdmin** is available at `http://localhost:8081`
+- **CodeIgniter** is available at `http://localhost:8080`
+- **MySQL** is available at port `3306`
 
 
 ## SQL Query Example Data
