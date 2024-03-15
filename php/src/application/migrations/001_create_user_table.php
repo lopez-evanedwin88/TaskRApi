@@ -25,6 +25,7 @@ class Migration_Create_User_Table extends CI_Migration
                         'email' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '100',
+                                'unique' => true,
                         ),
                         'staff_id' => array(
                                 'type' => 'VARCHAR',
@@ -46,6 +47,7 @@ class Migration_Create_User_Table extends CI_Migration
         $this->dbforge->add_key('id',true);
         $this->dbforge->create_table($this->table);
 
+        # Seeding user table
         $data = array(
                 array(
                         'id' => 1,
