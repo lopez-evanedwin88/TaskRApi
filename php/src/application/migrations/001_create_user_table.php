@@ -30,6 +30,7 @@ class Migration_Create_User_Table extends CI_Migration
                         'staff_id' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '5',
+                                'null' => TRUE,
                         ),
                         'password' => array(
                                 'type' => 'VARCHAR',
