@@ -50,6 +50,16 @@ class Migration_Create_User_Table extends CI_Migration
         # Seeding user table
         $data = array(
                 array(
+                        'id' => 11,
+                        'staff_id' => '011',
+                        'first_name' => 'Evan Edwin',
+                        'last_name' => 'lopez',
+                        'password' => 'test',
+                        'email' => 'test@gmail.com',
+                        'gender' => 'Male',
+                        'roles' => 'Admin',
+                ),
+                array(
                         'id' => 1,
                         'staff_id' => '001',
                         'first_name' => 'Salvidor',
