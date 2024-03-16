@@ -17,11 +17,15 @@ class Auth extends CI_Controller
         if ($this->input->method() === 'post') {
             $email = $this->input->post('email');
             $password = $this->input->post('password');
-            
-            if ((string) $email == "test@gmail.com" && (string) $password == "test") {
-                $token_data['id'] = 1;
-                $token_data['staff_id'] = "01";
-                $token_data['role'] = "Admin";
+
+            $this->db->select('id, staff_id, roles');
+            $query = $this->db->get_Where('user', array('email'=> (string) $email, 'password' => (string) $password));
+
+            if (!empty($query->row())) {
+                $user = $query->row();
+                $token_data['id'] = $user->id;
+                $token_data['staff_id'] = $user->staff_id;
+                $token_data['role'] = $user->roles;
                 $tokenData = $this->authorization_token->generateToken($token_data);
                 return $this->sendJson(array("token" => $tokenData, "status" => true, "response" => "Login Success!"));
             } else {
