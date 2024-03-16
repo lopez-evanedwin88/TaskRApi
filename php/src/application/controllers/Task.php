@@ -84,6 +84,55 @@ class Task extends CI_Controller {
         }
 	}
 
+    public function insertTask()
+	{
+		$headers = $this->input->request_headers();
+        if (isset($headers['Authorization'])) {
+            $decodedToken = $this->authorization_token->validateToken($headers['Authorization']);
+            if ($decodedToken['status']) {
+                if ($this->input->method() === 'post') {
+                    $client_id = $this->input->post('client_id');
+                    $start_date = $this->input->post('start_date');
+                    $due_date = $this->input->post('due_date');
+                    $title = $this->input->post('title');
+                    $status = $this->input->post('status');
+                    $assignee_id = $this->input->post('assignee_id');
+
+                    $message = $this->input->post('message');
+                    $image_url = $this->input->post('image_url');
+
+                    $task = array(
+                        'client_id' => $client_id,
+                        'start_date' => $start_date,
+                        'due_date' => $due_date,
+                        'title' => $title,
+                        'status' => $status,
+                        'assignee_id' => $assignee_id
+                    );
+
+                    $this->db->insert('task', $task);
+                    $new_id =  $this->db->insert_id();
+
+                    $task_record = array(
+                        'task_id' => $new_id,
+                        'message' => $message,
+                        'image_url' => $image_url,
+                    );
+
+                    $this->db->insert('task_record', $task_record);
+
+                    return $this->sendJson(array("status" => 200, "response" => "Successfully added a task"));
+                } else {
+                    return $this->sendJson(array("response" => "POST Method", "status" => false));
+                }
+            } else {
+                return $this->sendJson(array("status" => false, "response" => "Invalid Token"));
+            }
+        } else {
+            return $this->sendJson(array("status" => true, "response" => "Token Required"));
+        }
+	}
+
 	private function sendJson($data)
     {
         $this->output->set_header('Content-Type: application/json; charset=utf-8')->set_output(json_encode($data));
