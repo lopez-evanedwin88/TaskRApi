@@ -68,6 +68,46 @@ class User extends CI_Controller {
         }
 	}
 
+    public function insertUser()
+	{
+		$headers = $this->input->request_headers();
+        if (isset($headers['Authorization'])) {
+            $decodedToken = $this->authorization_token->validateToken($headers['Authorization']);
+            if ($decodedToken['status']) {
+                if ($this->input->method() === 'post') {
+                    $first_name = $this->input->post('first_name');
+                    $last_name = $this->input->post('last_name');
+                    $password = $this->input->post('password');
+                    $email = $this->input->post('email');
+                    $gender = $this->input->post('gender');
+                    $roles = $this->input->post('roles');
+
+                    $data = array(
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
+                        'password' => $password,
+                        'email' => $email,
+                        'gender' => $gender,
+                        'roles' => $roles
+                    );
+
+                    $this->db->insert('user', $data);
+                    $new_id =  $this->db->insert_id();
+                    $this->db->where('id', $new_id);
+                    $this->db->update('user', array('staff_id' => sprintf("%03d", $new_id)));
+
+                    return $this->sendJson(array("status" => 200, "response" => "Successfully created a user"));
+                } else {
+                    return $this->sendJson(array("response" => "POST Method", "status" => false));
+                }
+            } else {
+                return $this->sendJson(array("status" => false, "response" => "Invalid Token"));
+            }
+        } else {
+            return $this->sendJson(array("status" => true, "response" => "Token Required"));
+        }
+	}
+
 	private function sendJson($data)
     {
         $this->output->set_header('Content-Type: application/json; charset=utf-8')->set_output(json_encode($data));
