@@ -58,15 +58,20 @@ class Task extends CI_Controller {
 					$user = $query->row();
                     $tasks = "";
 
+                    $this->db->select('task.id, task.title, task.description, task.assignee_id, GROUP_CONCAT(task_record.image_url) AS medias');
+                    $this->db->from('task');
+                    $this->db->join('task_record', 'task.id = task_record.task_id', 'left');
+
                     if((string) $user->roles == "Client") {
-                        $query = $this->db->get_Where('task', array('client_id'=> (string) $user->staff_id));
-					    $tasks = $query->result();
+                        $this->db->where('task.client_id', (string) $user->staff_id);
                     } else if ((string) $user->roles == "Staff") {
-                        $query = $this->db->get_Where('task', array('assignee_id'=> (string) $user->staff_id));
-					    $tasks = $query->result();
-                    } else { // Admin
-                        $tasks = $this->db->get('user')->result();
-                    }
+                        $this->db->where('task.assignee_id', (string) $user->staff_id);
+                    } // else default Admin
+
+                    $this->db->group_by('task.id');
+                    $query = $this->db->get();
+                    $tasks = $query->result_array();
+
                     return $this->sendJson(array("data" => $tasks, "status" => 200, "response" => "Successfully get user"));
                 } else {
                     return $this->sendJson(array("response" => "GET Method", "status" => false));
