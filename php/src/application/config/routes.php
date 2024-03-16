@@ -54,5 +54,7 @@ $route['login'] = 'auth/login';
 $route['media'] = 'media/upload';
 $route['user']  = 'user';
 $route['user/(:any)']  = 'user/getUser/$1'; 
+$route['tasks']  = 'task';
+$route['task/(:any)']  = 'task/getTaskbyUser/$1'; 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
