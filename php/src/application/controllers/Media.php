@@ -15,13 +15,15 @@ class Media extends CI_Controller {
                     // Load the file uploading library
                     $this->load->library('upload');
 
+                    $media_data="";
+                    $media_error = "";
+                    $isImage = false;
+                    $isVideo = false;
+
                     // Specify upload configuration for images
                     $image_config['upload_path']   = './uploads/images/';
                     $image_config['allowed_types'] = 'gif|jpg|jpeg|png';
                     $image_config['max_size']      = 10240; // 10MB max size (adjust as needed)
-                    $media_error = "";
-                    $isImage = false;
-                    $isVideo = false;
 
                     // Initialize image upload
                     $this->upload->initialize($image_config);
@@ -29,8 +31,8 @@ class Media extends CI_Controller {
                     // Check if image upload is successful
                     if ($this->upload->do_upload('image')) {
                         // Image uploaded successfully
-                        $image_data = $this->upload->data();
-                        // Process image data as needed
+                        $media_data = $this->upload->data();
+                        // Process video data as needed to compress
                     } else {
                         // Image upload failed
                         $media_error = $this->upload->display_errors($open = '', $close = '');
@@ -48,8 +50,8 @@ class Media extends CI_Controller {
                     // Check if video upload is successful
                     if ($this->upload->do_upload('video')) {
                         // Video uploaded successfully
-                        $video_data = $this->upload->data();
-                        // Process video data as needed
+                        $media_data = $this->upload->data();
+                        // Process video data as needed to compress
                     } else {
                         // Video upload failed
                         $media_error = $this->upload->display_errors($open = '', $close = '');
@@ -57,7 +59,7 @@ class Media extends CI_Controller {
                     }
 
                     // Return response or perform any other actions
-                    $data['url'] = "http://test.com/success.png";
+                    $data['url'] = $media_data['file_name'];
 
                     if(!empty($media_error) && $isImage && $isVideo) {
                         return $this->sendJson(array("status" => 404, "response" => $media_error));
