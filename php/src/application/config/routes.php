@@ -56,6 +56,7 @@ $route['user'] = 'user';
 $route['user/create'] = 'user/insertUser';
 $route['user/(:any)'] = 'user/getUser/$1';
 $route['tasks'] = 'task';
+$route['task/create'] = 'task/insertTask';
 $route['task/(:any)']  = 'task/getTaskbyUser/$1'; 
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
