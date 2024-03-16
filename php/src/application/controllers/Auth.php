@@ -19,8 +19,9 @@ class Auth extends CI_Controller
             $password = $this->input->post('password');
             
             if ((string) $email == "test@gmail.com" && (string) $password == "test") {
-                $token_data['userEmail'] = $email;
-                $token_data['userRole'] = "Admin";
+                $token_data['id'] = 1;
+                $token_data['staff_id'] = "01";
+                $token_data['role'] = "Admin";
                 $tokenData = $this->authorization_token->generateToken($token_data);
                 return $this->sendJson(array("token" => $tokenData, "status" => true, "response" => "Login Success!"));
             } else {
