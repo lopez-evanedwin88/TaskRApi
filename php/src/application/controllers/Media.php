@@ -19,6 +19,9 @@ class Media extends CI_Controller {
                     $image_config['upload_path']   = './uploads/images/';
                     $image_config['allowed_types'] = 'gif|jpg|jpeg|png';
                     $image_config['max_size']      = 10240; // 10MB max size (adjust as needed)
+                    $media_error = "";
+                    $isImage = false;
+                    $isVideo = false;
 
                     // Initialize image upload
                     $this->upload->initialize($image_config);
@@ -30,8 +33,8 @@ class Media extends CI_Controller {
                         // Process image data as needed
                     } else {
                         // Image upload failed
-                        $image_error = $this->upload->display_errors();
-                        // Handle error
+                        $media_error = $this->upload->display_errors($open = '', $close = '');
+                        $isImage = true;
                     }
 
                     // Specify upload configuration for videos
@@ -47,17 +50,21 @@ class Media extends CI_Controller {
                         // Video uploaded successfully
                         $video_data = $this->upload->data();
                         // Process video data as needed
-                        print_r($video_data);
                     } else {
                         // Video upload failed
-                        $video_error = $this->upload->display_errors();
-                        // Handle error
+                        $media_error = $this->upload->display_errors($open = '', $close = '');
+                        $isVideo = true;
                     }
 
                     // Return response or perform any other actions
-                $data['url'] = "http://test.com/success.png";
+                    $data['url'] = "http://test.com/success.png";
 
-                    return $this->sendJson(array("data" => $data, "status" => true, "response" => "Login Success!"));
+                    if(!empty($media_error) && $isImage && $isVideo) {
+                        return $this->sendJson(array("status" => 404, "response" => $media_error));
+                    } else {
+                        return $this->sendJson(array("data" => $data, "status" => true, "response" => "Media uploaded successfully"));
+                    }
+                    
                 } else {
                     return $this->sendJson(array("response" => "POST Method", "status" => false));
                 }
