@@ -1,42 +1,48 @@
 # CodeIgniter 3 on Docker
 
-This is a simple Docker image for CodeIgniter 3. It is based on the official PHP image and includes the latest version of CodeIgniter 3.
+This repository provides a Dockerized environment for running CodeIgniter 3 applications. It utilizes the official PHP Docker image and includes the latest version of CodeIgniter 3.
 
-## How to run
+## How to Run
 
-Clone this repository and run the following command:
+To get started, follow these steps:
+
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/yourusername/codeigniter-docker.git
+    ```
+
+2. Navigate to the cloned directory:
+    ```bash
+    cd codeigniter-docker
+    ```
+
+3. Run the following command to start the Docker containers:
+    ```bash
+    docker-compose up -d
+    ```
+
+## Accessing the Containers
+
+Once the containers are up and running, you can access the following services:
+
+- **PHPMyAdmin:** Available at [http://localhost:8081](http://localhost:8081)
+  - Use this interface to manage your MySQL databases.
+  
+- **CodeIgniter Application:** Available at [http://localhost:8080](http://localhost:8080)
+  - This is where your CodeIgniter application will be accessible.
+
+  ### Test Account
+  - You can log in to the application using the following test account:
+    - **Username:** `test@gmail.com`
+    - **Password:** `test`
+  
+- **MySQL:** Accessible at port `3306`
+  - Use this port to connect to your MySQL database from your applications.
+
+## Running Migrations
+
+To run migrations for your CodeIgniter application, you can use the following command within the CodeIgniter container:
 
 ```bash
-docker-compose up -d
-```
-
-## Container 
-
-- **PHPMyAdmin** is available at `http://localhost:8081`
-- **CodeIgniter** is available at `http://localhost:8080`
-- **MySQL** is available at port `3306`
-
-
-## SQL Query Example Data
-
-The following SQL query can be used to create the example data:
-
-```sql
-create table users (
-	id INT,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	email VARCHAR(50),
-	gender VARCHAR(50)
-);
-insert into users (id, first_name, last_name, email, gender) values (1, 'Salvidor', 'Zorzenoni', 'szorzenoni0@etsy.com', 'Male');
-insert into users (id, first_name, last_name, email, gender) values (2, 'Verna', 'Marciek', 'vmarciek1@independent.co.uk', 'Female');
-insert into users (id, first_name, last_name, email, gender) values (3, 'Belinda', 'Ablott', 'bablott2@nifty.com', 'Female');
-insert into users (id, first_name, last_name, email, gender) values (4, 'Rudd', 'Powlett', 'rpowlett3@abc.net.au', 'Male');
-insert into users (id, first_name, last_name, email, gender) values (5, 'Gwenneth', 'Rainbird', 'grainbird4@google.com.br', 'Female');
-insert into users (id, first_name, last_name, email, gender) values (6, 'Clarine', 'Whistance', 'cwhistance5@blog.com', 'Female');
-insert into users (id, first_name, last_name, email, gender) values (7, 'Hakim', 'Rogans', 'hrogans6@illinois.edu', 'Male');
-insert into users (id, first_name, last_name, email, gender) values (8, 'Colman', 'Longstreet', 'clongstreet7@slideshare.net', 'Male');
-insert into users (id, first_name, last_name, email, gender) values (9, 'Padraig', 'Utting', 'putting8@phoca.cz', 'Male');
-insert into users (id, first_name, last_name, email, gender) values (10, 'Arny', 'Huggon', 'ahuggon9@samsung.com', 'Male');
+docker-compose exec php-apache-environment php index.php migrate
 ```
