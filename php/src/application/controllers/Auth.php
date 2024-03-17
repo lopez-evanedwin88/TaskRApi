@@ -27,7 +27,8 @@ class Auth extends CI_Controller
                 $token_data['staff_id'] = $user->staff_id;
                 $token_data['role'] = $user->roles;
                 $tokenData = $this->authorization_token->generateToken($token_data);
-                return $this->sendJson(array("token" => $tokenData, "status" => true, "response" => "Login Success!"));
+                $token_data['token'] = $tokenData;
+                return $this->sendJson(array("user"=> $token_data,"token" => $tokenData, "status" => true, "response" => "Login Success!"));
             } else {
                 return $this->sendJson(array("token" => null, "status" => false, "response" => "Login Failed!"));
             }
