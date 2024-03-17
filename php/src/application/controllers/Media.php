@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Media extends CI_Controller {
     public function __construct() {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding,Authorization");
         parent::__construct();
     }
 
@@ -14,7 +17,7 @@ class Media extends CI_Controller {
                 if ($this->input->method() === 'post') {
                     // Load the file uploading library
                     $this->load->library('upload');
-
+                    
                     $media_data="";
                     $media_error = "";
                     $isImage = false;
@@ -58,12 +61,11 @@ class Media extends CI_Controller {
                         $isVideo = true;
                     }
 
-                    // Return response or perform any other actions
-                    $data['url'] = $media_data['file_name'];
-
                     if(!empty($media_error) && $isImage && $isVideo) {
                         return $this->sendJson(array("status" => 404, "response" => $media_error));
                     } else {
+                        //Return response or perform any other actions
+                        $data['url'] = $media_data['file_name'];
                         return $this->sendJson(array("data" => $data, "status" => true, "response" => "Media uploaded successfully"));
                     }
                     
