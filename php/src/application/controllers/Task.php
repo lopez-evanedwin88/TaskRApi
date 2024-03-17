@@ -58,7 +58,7 @@ class Task extends CI_Controller {
 					$user = $query->row();
                     $tasks = "";
 
-                    $this->db->select('task.id, task.title, task.description, task.assignee_id, GROUP_CONCAT(task_record.image_url) AS medias');
+                    $this->db->select('task.id, task.title, task.description, task.assignee_id, task.client_id, task.start_date, task.due_date, task.status, GROUP_CONCAT(task_record.image_url) AS medias');
                     $this->db->from('task');
                     $this->db->join('task_record', 'task.id = task_record.task_id', 'left');
 
@@ -72,7 +72,7 @@ class Task extends CI_Controller {
                     $query = $this->db->get();
                     $tasks = $query->result_array();
 
-                    return $this->sendJson(array("data" => $tasks, "status" => 200, "response" => "Successfully get user"));
+                    return $this->sendJson(array("data" => $tasks, "status" => 200, "response" => "Successfully get tasks"));
                 } else {
                     return $this->sendJson(array("response" => "GET Method", "status" => false));
                 }
