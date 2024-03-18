@@ -15,11 +15,11 @@ class Auth extends CI_Controller
     public function login()
     {
         if ($this->input->method() === 'post') {
-            $email = $this->input->post('email');
+            $email = $this->input->post('staff_id');
             $password = $this->input->post('password');
 
             $this->db->select('id, staff_id, roles');
-            $query = $this->db->get_Where('user', array('email'=> (string) $email, 'password' => (string) $password));
+            $query = $this->db->get_Where('user', array('staff_id'=> (string) $email, 'password' => (string) $password));
 
             if (!empty($query->row())) {
                 $user = $query->row();
