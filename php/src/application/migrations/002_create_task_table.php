@@ -44,6 +44,7 @@ class Migration_Create_Task_Table extends CI_Migration
                         'assignee_id' => array(
                             'type' => 'VARCHAR',
                             'constraint' => '5',
+                            'null'=> TRUE,
                         ),
                         'created_date datetime default current_timestamp',
                         'updated_date datetime default current_timestamp on update current_timestamp', 
