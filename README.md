@@ -13,7 +13,7 @@ To get started, follow these steps:
 
 2. Navigate to the cloned directory:
     ```bash
-    cd codeigniter-docker
+    cd TaskRApi
     ```
 
 3. Run the following command to start the Docker containers:
