@@ -135,6 +135,36 @@ class Task extends CI_Controller {
         }
 	}
 
+    public function updateTaskStatus($id = NULL)
+	{
+		$headers = $this->input->request_headers();
+        if (isset($headers['Authorization'])) {
+            $decodedToken = $this->authorization_token->validateToken($headers['Authorization']);
+            if ($decodedToken['status']) {
+                if ($this->input->method() === 'post') { 
+                    // Retrieve data from request
+                    $status = $this->input->post('status');
+                    $assignee_id = $this->input->post('assignee_id');
+
+                    // Update task record in the database
+                    $this->db->where('id', $id);
+                    $this->db->update('task', array(
+                            'status' => $status, 
+                            'assignee_id' => $assignee_id)
+                        );
+
+                    return $this->sendJson(array("status" => 200, "response" => "Successfully added a task"));
+                } else {
+                    return $this->sendJson(array("response" => "POST Method", "status" => false));
+                }
+            } else {
+                return $this->sendJson(array("status" => false, "response" => "Invalid Token"));
+            }
+        } else {
+            return $this->sendJson(array("status" => true, "response" => "Token Required"));
+        }
+	}
+
 	private function sendJson($data)
     {
         $this->output->set_header('Content-Type: application/json; charset=utf-8')->set_output(json_encode($data));

@@ -58,6 +58,7 @@ $route['user/(:any)'] = 'user/getUser/$1';
 $route['tasks'] = 'task';
 $route['task/create'] = 'task/insertTask';
 $route['task/(:any)']  = 'task/getTaskbyUser/$1'; 
+$route['task/update_task_status/(:any)'] = 'task/updateTaskStatus/$1';
 $route['task_record'] = 'taskRecord';
 $route['task_record/create'] = 'taskRecord/insertTaskRecord';
 $route['task_record/(:any)']  = 'taskRecord/getTaskRecords/$1'; 
