@@ -92,35 +92,37 @@ class Task extends CI_Controller {
             if ($decodedToken['status']) {
                 if ($this->input->method() === 'post') {
                     $client_id = $this->input->post('client_id');
-                    $start_date = $this->input->post('start_date');
-                    $due_date = $this->input->post('due_date');
+                    $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : NULL;
+                    $due_date = $this->input->post('due_date') ? $this->input->post('due_date') : NULL;
                     $title = $this->input->post('title');
+                    $description = $this->input->post('description') ? $this->input->post('description') : NULL;
                     $status = $this->input->post('status');
-                    $assignee_id = $this->input->post('assignee_id');
+                    $assignee_id = $this->input->post('assignee_id') ? $this->input->post('assignee_id') : NULL;
 
-                    $message = $this->input->post('message');
-                    $image_url = $this->input->post('image_url');
+                    $message = $this->input->post('message') ? $this->input->post('message') : NULL;
+                    $image_url = $this->input->post('image_url') ? $this->input->post('image_url') : NULL;
 
                     $task = array(
                         'client_id' => $client_id,
                         'start_date' => $start_date,
                         'due_date' => $due_date,
                         'title' => $title,
+                        'description' => $description,
                         'status' => $status,
                         'assignee_id' => $assignee_id
                     );
 
                     $this->db->insert('task', $task);
-                    $new_id =  $this->db->insert_id();
 
-                    $task_record = array(
-                        'task_id' => $new_id,
-                        'message' => $message,
-                        'image_url' => $image_url,
-                    );
-
-                    $this->db->insert('task_record', $task_record);
-
+                    if(!empty($description) || !empty($image_url)) {
+                        $new_id =  $this->db->insert_id();
+                        $task_record = array(
+                            'task_id' => $new_id,
+                            'message' => $description,
+                            'image_url' => $image_url,
+                        );
+                        $this->db->insert('task_record', $task_record);
+                    }
                     return $this->sendJson(array("status" => 200, "response" => "Successfully added a task"));
                 } else {
                     return $this->sendJson(array("response" => "POST Method", "status" => false));
