@@ -21,10 +21,12 @@ class Migration_Create_Task_Record_Table extends CI_Migration
                         'message' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '100',
+                                'null' => TRUE
                         ),
                         'image_url' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '100',
+                                'null' => TRUE
                         ),
                 ));
         $this->dbforge->add_key('id',true);
