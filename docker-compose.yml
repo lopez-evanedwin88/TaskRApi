@@ -9,8 +9,11 @@ services:
       - db
     volumes:
       - ./php/src:/var/www/html/
+      - ./php/src/uploads/images:/var/www/html/uploads/images  # Mount the uploads directory to the PHP container
+      - ./php/src/uploads/videos:/var/www/html/uploads/videos
     ports:
       - "8080:80"
+    command: /bin/bash -c "mkdir -p /var/www/html/uploads/videos && mkdir -p /var/www/html/uploads/images && apache2-foreground"  # Create the uploads/videos and uploads/images directories and start Apache
 
   db:
     container_name: db-ci
