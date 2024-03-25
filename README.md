@@ -33,8 +33,9 @@ Once the containers are up and running, you can access the following services:
 
   ### Test Account
   - You can log in to the application using the following test account:
-    - **Username:** `test@gmail.com`
-    - **Password:** `test`
+    # Client Account
+    - **Staff id:** `005`
+    - **Password:** `test123`
   
 - **MySQL:** Accessible at port `3306`
   - Use this port to connect to your MySQL database from your applications.
