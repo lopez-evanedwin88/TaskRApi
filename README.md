@@ -31,9 +31,8 @@ Once the containers are up and running, you can access the following services:
 - **CodeIgniter Application:** Available at [http://localhost:8080](http://localhost:8080)
   - This is where your CodeIgniter application will be accessible.
 
-  ### Test Account
+  ### Test Account //Client
   - You can log in to the application using the following test account:
-    # Client Account
     - **Staff id:** `005`
     - **Password:** `test123`
   
