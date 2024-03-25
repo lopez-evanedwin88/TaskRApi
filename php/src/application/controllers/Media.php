@@ -7,6 +7,7 @@ class Media extends CI_Controller {
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding,Authorization");
         parent::__construct();
+        $this->load->helper(array('form', 'url'));
     }
 
     public function upload() {
@@ -15,57 +16,41 @@ class Media extends CI_Controller {
             $decodedToken = $this->authorization_token->validateToken($headers['Authorization']);
             if ($decodedToken['status']) {
                 if ($this->input->method() === 'post') {
-                    // Load the file uploading library
-                    $this->load->library('upload');
-                    
-                    $media_data="";
-                    $media_error = "";
-                    $isImage = false;
-                    $isVideo = false;
-
-                    // Specify upload configuration for images
-                    $image_config['upload_path']   = './uploads/images/';
-                    $image_config['allowed_types'] = 'gif|jpg|jpeg|png';
-                    $image_config['max_size']      = 10240; // 10MB max size (adjust as needed)
-
-                    // Initialize image upload
-                    $this->upload->initialize($image_config);
-
-                    // Check if image upload is successful
-                    if ($this->upload->do_upload('image')) {
-                        // Image uploaded successfully
-                        $media_data = $this->upload->data();
-                        // Process video data as needed to compress
+                    // Set upload configurations
+                    $config['upload_path'] = './uploads/';
+                    $config['allowed_types'] = 'gif|jpg|jpeg|png|mp4|avi|mov';
+                    $config['max_size'] = 21000; // Adjust max size as needed
+                    $config['max_width'] = 8000; // Adjust max width as needed
+                    $config['max_height'] = 8000; // Adjust max height as needed
+            
+                    $this->load->library('upload', $config);
+            
+                    if (!$this->upload->do_upload('media')) {
+                        return $this->sendJson(array("response" => $this->upload->display_errors($open = '', $close = ''), "status" => false));
                     } else {
-                        // Image upload failed
-                        $media_error = $this->upload->display_errors($open = '', $close = '');
-                        $isImage = true;
-                    }
+                         // If upload is successful, determine file type and move to appropriate directory
+                        $upload_data = $this->upload->data();
+                        $file_type = $upload_data['file_ext'];
 
-                    // Specify upload configuration for videos
-                    $video_config['upload_path']   = './uploads/videos/';
-                    $video_config['allowed_types'] = 'mp4|avi|mov|flv';
-                    $video_config['max_size']      = 102400; // 100MB max size (adjust as needed)
+                        if (in_array($file_type, array('.gif', '.jpg', '.jpeg', '.png'))) {
+                            // Image file, move to images directory
+                            $new_path = './uploads/images/';
+                        } elseif (in_array($file_type, array('.mp4', '.avi', '.mov'))) {
+                            // Video file, move to videos directory
+                            $new_path = './uploads/videos/';
+                        } else {
+                            // Unsupported file type, delete uploaded file and return error message
+                            unlink($upload_data['full_path']);
+                            return $this->sendJson(array("response" => "Unsupported file type.", "status" => false));
+                        }
 
-                    // Initialize video upload
-                    $this->upload->initialize($video_config);
+                        // Move uploaded file to the appropriate directory
+                        $new_file_path = $new_path . $upload_data['file_name'];
+                        rename($upload_data['full_path'], $new_file_path);
+                        $data['url'] = $upload_data['file_name'];
+                        $data['file_path'] = $new_file_path;
 
-                    // Check if video upload is successful
-                    if ($this->upload->do_upload('video')) {
-                        // Video uploaded successfully
-                        $media_data = $this->upload->data();
-                        // Process video data as needed to compress
-                    } else {
-                        // Video upload failed
-                        $media_error = $this->upload->display_errors($open = '', $close = '');
-                        $isVideo = true;
-                    }
-
-                    if(!empty($media_error) && $isImage && $isVideo) {
-                        return $this->sendJson(array("status" => 404, "response" => $media_error));
-                    } else {
-                        //Return response or perform any other actions
-                        $data['url'] = $media_data['file_name'];
+                        // Return success response with file details
                         return $this->sendJson(array("data" => $data, "status" => true, "response" => "Media uploaded successfully"));
                     }
                     
